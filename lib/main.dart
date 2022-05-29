@@ -4,6 +4,17 @@ import 'dart:developer';
 import 'package:tflite_audio/tflite_audio.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
+import 'dart:ui';
+import 'package:flutter/src/material/icons.dart';
+
+const Color kAccentColor = Color(0xFFFE7C64);
+const Color kBackgroundColor = Color(0xFF19283D);
+const Color kTextColorPrimary = Color(0xFFECEFF1);
+const Color kTextColorSecondary = Color(0xFFB0BEC5);
+const Color kButtonColorPrimary = Color(0xFFECEFF1);
+const Color kButtonTextColorPrimary = Color(0xFF455A64);
+const Color kIconColor = Color(0xFF455A64);
+
 
 void main() => runApp(const MyApp());
 
@@ -139,10 +150,40 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
+          backgroundColor: kBackgroundColor,
+            resizeToAvoidBottomInset: false,
             key: _scaffoldKey,
             appBar: AppBar(
-              title: const Text('Tflite-audio/speech'),
+              centerTitle: true,
+              title:Text('Covid_detector',style: new TextStyle(
+                fontSize: 30.0,
+                fontFamily: 'Roboto',
+                color: new Color(0xFFFFFFFF),
+                fontWeight: FontWeight.bold,
+              ),),
+              toolbarHeight: 100,
+              elevation: 10.0,
+                shape: CustomShapeBorder(),
+              backgroundColor: Colors.deepOrange,
+              flexibleSpace: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Image.asset(
+                    'assets/corona.png',
+                    fit: BoxFit.contain,
+                    width: 100,
+                    height: 100,
+                  ),
+                ],
+              ),
+
+
+              leading: Icon(Icons.coronavirus),
+              actions: <Widget>[
+                IconButton(icon: Icon(Icons.coronavirus),onPressed: (){},)
+              ],
             ),
+
 
             ///Streambuilder for inference results
             body: StreamBuilder<Map<dynamic, dynamic>>(
@@ -201,7 +242,7 @@ class _MyAppState extends State<MyApp> {
                           getResult();
                         });
                       },
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Colors.red,
                       child: const Icon(Icons.mic),
                     );
                   } else {
@@ -231,7 +272,7 @@ class _MyAppState extends State<MyApp> {
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 25,
+                          fontSize: 45,
                           color: Colors.green,
                         )));
               } else {
@@ -241,7 +282,8 @@ class _MyAppState extends State<MyApp> {
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          fontSize: 25,
+                          color: Colors.white60,
                         )));
               }
             }).toList()));
@@ -256,7 +298,29 @@ class _MyAppState extends State<MyApp> {
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
-              color: Colors.black,
+              color: Colors.white,
             )));
+  }
+}
+
+class CustomShapeBorder extends ContinuousRectangleBorder {
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
+
+    final double innerCircleRadius = 150.0;
+
+    Path path = Path();
+    path.lineTo(0, rect.height);
+    path.quadraticBezierTo(rect.width / 2 - (innerCircleRadius / 2) - 60, rect.height + 5, rect.width / 2 - 75, rect.height + 50);
+    path.cubicTo(
+        rect.width / 2 - 40, rect.height + innerCircleRadius - 70,
+        rect.width / 2 + 40, rect.height + innerCircleRadius - 70,
+        rect.width / 2 + 75, rect.height + 50
+    );
+    path.quadraticBezierTo(rect.width / 2 + (innerCircleRadius / 2) + 60, rect.height + 5, rect.width, rect.height);
+    path.lineTo(rect.width, 0.0);
+    path.close();
+
+    return path;
   }
 }
